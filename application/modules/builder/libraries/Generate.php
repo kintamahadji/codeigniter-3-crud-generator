@@ -256,6 +256,9 @@ class Generate
 
 
             $field_name[] = [
+                'php_open' => '<?php',
+                'php_close' => '?>',
+                'table' => $table,
                 'field_name' => $field,
                 'label' => $this->set_label($field),
                 'rules' => $validation
@@ -270,8 +273,7 @@ class Generate
             'labels' => $label_name,
             'fields' => $field_name,
             'fields_search' => $primary_search['field_search'],
-            'primary_key' => $primary_search['primary_key']
-
+            'primary_key' => $primary_search['primary_key'],
         ];
     }
 
@@ -380,7 +382,7 @@ class Generate
                                  'placeholder'  => '" . $this->set_label($key) . "',
                                  $max
                                  ),
-                                 set_value('$key',\${table}['$key'])
+                                 set_value('$key',\${$table}['$key'])
                            );";
                     break;
 
@@ -393,7 +395,7 @@ class Generate
                                  'placeholder'  => '" . $this->set_label($key) . "',
                                  $max
                                  ),
-                                 set_value('$key',\${table}['$key'])
+                                 set_value('$key',\${$table}['$key'])
                            );";
                     break;
 
@@ -415,7 +417,7 @@ class Generate
                                  'class'        => 'form-control input-sm $validation',
                                  'placeholder'  => ' " . $this->set_label($key) . "',
                                  ),
-                                 set_value('$key',\${table}['$key'])
+                                 set_value('$key',\${$table}['$key'])
                            );";
                     break;
 
@@ -448,7 +450,7 @@ class Generate
                                 'placeholder'   =>'" . $this->set_label($key) . "',
                                 $max
                                 ),
-                            set_value('$key',\${table}['$key'])                           
+                            set_value('$key',\${$table}['$key'])                           
                             );";
                     break;
 
@@ -470,18 +472,18 @@ class Generate
             }
 
 
-            if(isset($val['show'])) {
-
+            if (isset($val['show'])) 
+            {
                 $form[] = [
+                    'php_open' => '<?php',
+                    'php_close' => '?>',
+                    'table' => $table,
                     'input' => $input,
                     'label' => $this->set_label($key) . $required,
                     'label_comment' => $this->set_label($key),
                     'field' => $key
                 ];
-
-
             }
-
         }
 
         $data = $this->php_tags();
@@ -494,7 +496,6 @@ class Generate
         $source = $this->ci->parser->parse('template/form.php', $data, true);
 
         @write_file($this->output . $table . '/views/form.php', $source);
-        
     }
     
     
@@ -575,6 +576,10 @@ class Generate
         $data['primary_key'] = $all['primary_key'];
         $data['table'] = $table;
         $data['table_name'] = $this->set_label($table);
+        $data['php_open'] = '<?php';
+        $data['php_close'] = '?>';
+
+        log_message('error', json_encode($all['fields']));
 
         $source = $this->ci->parser->parse('template/view.php', $data, true);
 
